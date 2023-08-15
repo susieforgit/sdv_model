@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+"""Backrest model."""
+
+# pylint: disable=C0103,R0801,R0902,R0915,C0301,W0235
+
+
+from sdv.model import (
+    DataPointFloat,
+    Model,
+)
+
+from sdv_model.Cabin.Seat.Backrest.Lumbar import Lumbar
+from sdv_model.Cabin.Seat.Backrest.SideBolster import SideBolster
+
+
+class Backrest(Model):
+    """Backrest model.
+
+    Attributes
+    ----------
+    Recline: actuator
+        Backrest recline compared to seat z-axis (seat vertical axis). 0 degrees = Upright/Vertical backrest. Negative degrees for forward recline. Positive degrees for backward recline.
+
+        Seat z-axis depends on seat tilt. This means that movement of backrest due to seat tilting will not affect Backrest.Recline as long as the angle between Seating and Backrest are constant. Absolute recline relative to vehicle z-axis can be calculated as Tilt + Backrest.Recline.
+
+        Unit: degrees
+    Lumbar: branch
+        Adjustable lumbar support mechanisms in seats allow the user to change the seat back shape.
+
+    SideBolster: branch
+        Backrest side bolster (lumbar side support) settings.
+
+    """
+
+    def __init__(self, name, parent):
+        """Create a new Backrest model."""
+        super().__init__(parent)
+        self.name = name
+
+        self.Recline = DataPointFloat("Recline", self)
+        self.Lumbar = Lumbar("Lumbar", self)
+        self.SideBolster = SideBolster("SideBolster", self)
